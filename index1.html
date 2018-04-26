@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>piedra, papel, tijeras</title>
+  </head>
+
+  <body>
+    <script>
+      'use strict'
+
+
+
+      function computerPlay() {
+        let rps = Math.floor(Math.random()*3);
+        let result;
+
+        if (rps == 0) {
+          result = 'rock';
+        } else if (rps == 1) {
+          result = 'paper';
+        } else {
+          result = 'scissors';
+        }
+        return(result);
+      }
+
+      function singleRound() {
+        var playerSelection = prompt('ROCK, PAPER OR SCISSORS?');
+        var playerSelection = playerSelection.toLowerCase();
+        var computerSelection = computerPlay();
+        var computerScore;
+        var playerScore;
+
+        if (playerSelection == 'scissors' && computerSelection == 'rock' ||
+        playerSelection == 'rock' && computerSelection == 'paper' ||
+        playerSelection == 'paper' && computerSelection == 'scissors') {
+          computerScore = 1; playerScore = 0;
+          alert(`you LOSE! ${computerSelection} beats ${playerSelection}`);
+        } else if (playerSelection == 'rock' && computerSelection == 'scissors' ||
+          playerSelection == 'paper' && computerSelection == 'rock' ||
+          playerSelection == 'scissors' && computerSelection == 'paper') {
+          playerScore = 1; computerScore = 0;
+          alert(`you WIN! ${playerSelection} beats ${computerSelection}`);
+        } else if (playerSelection == computerSelection) {
+          computerScore = 0; playerScore = 0;
+          alert('we are EVEN, play again!');
+        } else {
+          alert('NAH! THAT IS NOT AN OPTION!');
+          return(singleRound());
+        }
+
+        return{
+          computerScore: computerScore,
+          playerScore: playerScore
+        };
+      }
+
+      function fiveRounds() {
+          let round1 = singleRound();
+          let round2 = singleRound();
+          let round3 = singleRound();
+          let round4 = singleRound();
+          let round5 = singleRound();
+          let allScores = [round1,round2, round3, round4, round5];
+          let computerScoreSum = 0;
+          let playerScoreSum = 0;
+
+          allScores.forEach(function(obj) {
+            computerScoreSum += obj['computerScore'];
+            playerScoreSum += obj['playerScore'];
+          });
+          alert(`The final score is Computer: ${computerScoreSum} Player: ${playerScoreSum}`);
+          return[computerScoreSum, playerScoreSum];
+
+        }
+
+
+
+
+
+
+
+
+    </script>
+  </body>
+
+</html>
