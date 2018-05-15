@@ -2,13 +2,95 @@
 
 <html>
   <head>
-    <title>piedra, papel, tijeras</title>
+    <title>Rock, Paper, Scissors</title>
+    <link rel="stylesheet" href="style.css">
   </head>
 
   <body>
-    <script>
-      'use strict'
+    <h1>ROCK, PAPER, SCISSORS</h1>
+    <div class='btns'>
+      <div class='btnPlayer'>
+        <div class='titles'>You</div>
+        <button id='rock'><img src="images/rock.png" width=180px height=180px></button>
+        <button id='paper'><img src="images/paper.png" width=180px height=180px></button>
+        <button id='scissors'><img src="images/scissors.png" width=180px height=180px></button>
+        <div id='playerScore'></div>
+      </div>
 
+      <div class='btnComputer'>
+        <div class='titles'>Computer</div>
+        <button><img src='images/rock.png' width=180px height=180px></button>
+        <button><img src='images/paper.png' width=180px height=180px></button>
+        <button><img src='images/scissors.png' width=180px height=180px></button>
+        <div id='computerScore'></div>
+      </div>
+    </div>
+    <div id='gameResult'></div>
+    <div id='finalScore'></div>
+    <div class='player'></div>
+    <div class='computer'></div>
+    <p class='reset'></p>
+
+    <script>
+
+      var btn = document.querySelectorAll('button');
+      btn.forEach(button =>
+        button.addEventListener('click', singleRound));
+
+      btn.forEach(button =>
+        button.addEventListener('click', appearImageP));
+
+      btn.forEach(button =>
+        button.addEventListener('transitionend', removeChange));
+
+      var reset = document.querySelector('p');
+        reset.addEventListener('click', resetGame);
+
+      var computerScoreSum = 0;
+      var playerScoreSum = 0;
+
+      function resetGame() {
+        var gameRes = document.querySelector('div#gameResult');
+        var scoreRes = document.querySelector('div#finalScore');
+        var imgP = document.querySelector('div.player');
+        var imgC = document.querySelector('div.computer');
+        var playerScoreRes = document.querySelector('div#playerScore');
+        var computerScoreRes = document.querySelector('div#computerScore');
+        var rst = document.querySelector('p.reset');
+        rst.textContent = '';
+        computerScoreRes.textContent = '';
+        playerScoreRes.textContent = '';
+        gameRes.textContent = '';
+        scoreRes.textContent = '';
+        imgP.classList.remove('selectionR');
+        imgP.classList.remove('selectionP');
+        imgP.classList.remove('selectionS');
+        imgC.classList.remove('selectionRC');
+        imgC.classList.remove('selectionPC');
+        imgC.classList.remove('selectionSC');
+      }
+
+      function appearImageP(e) {
+        var imgP = document.querySelector('div.player');
+        var imgId = `${this.id}`;
+        imgP.classList.remove('selectionR');
+        imgP.classList.remove('selectionP');
+        imgP.classList.remove('selectionS');
+        if (imgId === 'rock') {
+          imgP.classList.add('selectionR');
+          this.classList.add('test');
+        } else if (imgId === 'paper') {
+          imgP.classList.add('selectionP');
+          this.classList.add('test');
+        } else if (imgId === 'scissors') {
+          imgP.classList.add('selectionS');
+          this.classList.add('test');
+        }
+      }
+
+      function removeChange(e) {
+        this.classList.remove('test');
+      }
 
 
       function computerPlay() {
@@ -25,59 +107,60 @@
         return(result);
       }
 
-      function singleRound() {
-        var playerSelection = prompt('ROCK, PAPER OR SCISSORS?');
-        var playerSelection = playerSelection.toLowerCase();
+      function singleRound(e) {
+        var playerSelection =this.id;
         var computerSelection = computerPlay();
         var computerScore;
         var playerScore;
+        var imgC = document.querySelector('div.computer');
+        document.getElementById('finalScore').innerHTML = '';
+        imgC.classList.remove('selectionRC');
+        imgC.classList.remove('selectionPC');
+        imgC.classList.remove('selectionSC');
 
         if (playerSelection == 'scissors' && computerSelection == 'rock' ||
         playerSelection == 'rock' && computerSelection == 'paper' ||
         playerSelection == 'paper' && computerSelection == 'scissors') {
           computerScore = 1; playerScore = 0;
-          alert(`you LOSE! ${computerSelection} beats ${playerSelection}`);
+          document.getElementById('gameResult').innerHTML = `you LOSE! ${computerSelection} beats ${playerSelection}`;
         } else if (playerSelection == 'rock' && computerSelection == 'scissors' ||
           playerSelection == 'paper' && computerSelection == 'rock' ||
           playerSelection == 'scissors' && computerSelection == 'paper') {
           playerScore = 1; computerScore = 0;
-          alert(`you WIN! ${playerSelection} beats ${computerSelection}`);
+          document.getElementById('gameResult').innerHTML = `you WIN! ${playerSelection} beats ${computerSelection}`;
         } else if (playerSelection == computerSelection) {
           computerScore = 0; playerScore = 0;
-          alert('we are EVEN, play again!');
-        } else {
-          alert('NAH! THAT IS NOT AN OPTION!');
-          return(singleRound());
+          document.getElementById('gameResult').innerHTML = `${playerSelection}, ${computerSelection}: we are EVEN!`;
         }
 
-        return{
-          computerScore: computerScore,
-          playerScore: playerScore
-        };
+        computerScoreSum += computerScore;
+        playerScoreSum += playerScore;
+
+        document.getElementById('computerScore').innerHTML = computerScoreSum;
+        document.getElementById('playerScore').innerHTML = playerScoreSum;
+
+        if (computerScoreSum == 5) {
+          document.getElementById('finalScore').innerHTML = 'COMPUTER WINS!';
+          var reset = document.querySelector('p.reset');
+          reset.textContent = 'RESET';
+          computerScoreSum = 0;
+          playerScoreSum = 0;
+        } else if (playerScoreSum == 5) {
+          document.getElementById('finalScore').innerHTML = 'YOU WIN!';
+          var reset = document.querySelector('p.reset');
+          reset.textContent = 'RESET';
+          computerScoreSum = 0;
+          playerScoreSum = 0;
+        }
+
+        if (computerSelection === 'rock') {
+          imgC.classList.add('selectionRC');
+        } else if (computerSelection === 'paper') {
+          imgC.classList.add('selectionPC');
+        } else if (computerSelection === 'scissors') {
+          imgC.classList.add('selectionSC');
+        }
       }
-
-      function fiveRounds() {
-          let round1 = singleRound();
-          let round2 = singleRound();
-          let round3 = singleRound();
-          let round4 = singleRound();
-          let round5 = singleRound();
-          let allScores = [round1,round2, round3, round4, round5];
-          let computerScoreSum = 0;
-          let playerScoreSum = 0;
-
-          allScores.forEach(function(obj) {
-            computerScoreSum += obj['computerScore'];
-            playerScoreSum += obj['playerScore'];
-          });
-          alert(`The final score is Computer: ${computerScoreSum} Player: ${playerScoreSum}`);
-          return[computerScoreSum, playerScoreSum];
-
-        }
-
-
-
-
 
 
 
